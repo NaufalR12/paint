@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Paint Dea - Grafika Komputer</title>
+    <link rel="stylesheet" href="css/gaya.css" />
+  </head>
+  <body>
+    <div class="kontainer">
+      <header class="appbar">
+        <nav class="appbar-menu">
+          <div class="panel panel-inline">
+            <label for="dropdownBentuk"
+              ><span class="icon-shape"></span> Bentuk Dasar</label
+            >
+            <select id="dropdownBentuk">
+              <option value="garis">Garis</option>
+              <option value="persegi">Persegi</option>
+              <option value="segitiga">Segitiga</option>
+              <option value="lingkaran">Lingkaran</option>
+              <option value="elips">Elips</option>
+              <option value="jajargenjang">Jajargenjang</option>
+              <option value="trapesium">Trapesium</option>
+            </select>
+          </div>
+          <div class="panel panel-inline">
+            <label for="pilihAlgoritma"
+              ><span class="icon-algo"></span> Algoritma</label
+            >
+            <select id="pilihAlgoritma">
+              <option value="dda">DDA</option>
+              <option value="bresenham">Bresenham</option>
+            </select>
+          </div>
+          <div class="panel panel-inline">
+            <label for="jenisGaris"
+              ><span class="icon-line"></span> Jenis Garis</label
+            >
+            <select id="jenisGaris">
+              <option value="solid">Garis Biasa</option>
+              <option value="dashed">Garis Putus-putus</option>
+              <option value="dotted">Garis Titik-titik</option>
+              <option value="dashdot">Garis Kombinasi</option>
+            </select>
+          </div>
+          <div class="panel panel-inline warna-panel">
+            <label
+              ><span class="icon-kuas"></span>
+              <input
+                type="color"
+                id="warnaGaris"
+                value="#000000"
+                title="Warna Garis"
+            /></label>
+            <label
+              ><span class="icon-ember"></span>
+              <input
+                type="color"
+                id="warnaIsi"
+                value="#ffffff"
+                title="Warna Isi"
+            /></label>
+          </div>
+        </nav>
+      </header>
+      <div class="konten-utama">
+        <main class="area-kanvas">
+          <canvas id="kanvas"></canvas>
+        </main>
+        <aside class="sidebar-kanan">
+          <div class="panel" id="panelTransformasi">
+            <h2>Transformasi</h2>
+            <select id="dropdownTransformasi">
+              <option value="translasi">Translasi</option>
+              <option value="rotasi">Rotasi</option>
+              <option value="skala">Skala</option>
+            </select>
+            <div id="formTransformasi">
+              <!-- Form dinamis akan muncul di sini -->
+            </div>
+          </div>
+          <div class="panel">
+            <h2>Aksi</h2>
+            <button id="btnDuplikat">Duplikat Objek</button>
+            <button id="btnHapus">Hapus Objek</button>
+            <button id="btnReset">Reset Canvas</button>
+          </div>
+        </aside>
+      </div>
+      <footer class="footer-app">
+        © 2025 naufal rafid muhammad faddila (123220052)
+      </footer>
+    </div>
+
+    <!-- Script -->
+    <script src="js/algoritma/dda.js"></script>
+    <script src="js/algoritma/bresenham.js"></script>
+    <script src="js/algoritma/midpoint_lingkaran.js"></script>
+    <script src="js/algoritma/midpoint_elips.js"></script>
+    <script src="js/algoritma/isi_area.js"></script>
+    <script src="js/transformasi/translasi.js"></script>
+    <script src="js/transformasi/rotasi.js"></script>
+    <script src="js/transformasi/skala.js"></script>
+    <script src="js/utama.js"></script>
+  </body>
+</html>

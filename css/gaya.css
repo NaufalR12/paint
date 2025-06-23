@@ -1,0 +1,479 @@
+/* Reset dan Variabel */
+:root {
+  --warna-primer: #1976d2;
+  --warna-sekunder: #64b5f6;
+  --warna-latar: #e3f2fd;
+  --warna-teks: #0d223a;
+  --warna-aksen: #90caf9;
+  --bayangan: 0 2px 8px rgba(25, 118, 210, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--warna-latar);
+  color: var(--warna-teks);
+}
+
+/* Layout Utama */
+.kontainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(120deg, #e3f2fd 60%, #90caf9 100%);
+}
+
+.appbar {
+  width: 100%;
+  background: linear-gradient(to right, #1976d2, #2196f3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+  padding: 0 16px;
+  min-height: 0;
+  max-height: 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 10;
+}
+
+.appbar-judul {
+  text-align: center;
+  margin-bottom: 2px;
+}
+
+.appbar-menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
+  justify-content: center;
+  flex-wrap: wrap;
+  min-height: 56px;
+}
+
+.appbar .panel {
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(25, 118, 210, 0.06);
+  border: 1px solid #bbdefb;
+  padding: 4px 3px;
+  min-width: 70px;
+  margin-bottom: 0;
+  min-width: 0;
+}
+
+.appbar .panel h2 {
+  color: var(--warna-primer);
+  font-size: 11px;
+  margin-bottom: 2px;
+  text-align: center;
+}
+
+.appbar .panel select,
+.appbar .panel input[type="color"] {
+  width: 100%;
+  margin-bottom: 1px;
+}
+
+button {
+  background-color: var(--warna-primer);
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 6px;
+  font-size: 13px;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: var(--warna-sekunder);
+}
+
+#kanvas {
+  background-color: white;
+  box-shadow: var(--bayangan);
+  border-radius: 4px;
+  border: 2px solid var(--warna-aksen);
+  transition: box-shadow 0.3s;
+}
+
+#kanvas:focus,
+#kanvas:hover {
+  box-shadow: 0 0 0 4px #90caf966;
+}
+
+.area-kanvas {
+  flex: 1;
+  padding: 24px 10px 10px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+/* Panel dan Heading */
+.panel {
+  background-color: var(--warna-latar);
+  border-radius: 10px;
+  padding: 20px 14px;
+  margin-bottom: 0;
+  min-width: 0;
+  box-shadow: 0 2px 8px rgba(164, 195, 178, 0.1);
+  border: 1px solid #e0e0e0;
+}
+
+h1 {
+  color: var(--warna-primer);
+  margin-bottom: 30px;
+  font-size: 24px;
+  text-align: center;
+}
+
+h2 {
+  color: var(--warna-primer);
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+h3 {
+  color: var(--warna-teks);
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.panel h2 {
+  font-size: 15px;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+.panel h3 {
+  font-size: 13px;
+  margin-bottom: 7px;
+  letter-spacing: 0.2px;
+}
+.panel label,
+.panel span,
+.panel select,
+.panel input[type="number"] {
+  font-size: 12px;
+}
+
+/* Input dan Select */
+.input-group {
+  margin-bottom: 12px;
+}
+
+label {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--warna-teks);
+}
+
+input[type="number"],
+input[type="text"],
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--warna-sekunder);
+  border-radius: 4px;
+  background-color: white;
+}
+
+.judul-diatas-kanvas {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.input-warna-horiz {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.input-warna-horiz .input-group {
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.input-warna-horiz span {
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 2px;
+}
+
+input[type="color"] {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  padding: 0;
+  border: 1.5px solid var(--warna-sekunder);
+  box-sizing: border-box;
+}
+
+/* Transformasi Group */
+.transformasi-group {
+  background-color: white;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+/* Responsif */
+@media (max-width: 1200px) {
+  .appbar-menu {
+    gap: 10px;
+  }
+  .appbar .panel {
+    min-width: 100px;
+    padding: 10px 4px;
+  }
+}
+@media (max-width: 900px) {
+  .appbar-menu {
+    gap: 8px;
+    flex-wrap: wrap;
+    min-height: 64px;
+  }
+  .appbar .panel {
+    width: 90vw;
+    max-width: 400px;
+  }
+}
+
+.input-panah {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+.input-panah button {
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  background-color: var(--warna-aksen);
+  color: var(--warna-teks);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.input-panah button:hover {
+  background-color: var(--warna-sekunder);
+}
+
+.input-panah-dpad {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 4px;
+  gap: 16px;
+}
+.input-panah-dpad button {
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+  background-color: #6b7a86;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.input-panah-dpad button:hover {
+  background-color: #a4c3b2;
+  color: #2f3e46;
+}
+.dpad-center {
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+}
+
+.judul-estetik {
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--warna-primer);
+  text-align: center;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--warna-primer) 0%,
+    var(--warna-sekunder) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.garis-bawah {
+  width: 30%;
+  height: 2px;
+  margin: 0 auto 4px auto;
+  background: linear-gradient(
+    90deg,
+    var(--warna-primer) 0%,
+    var(--warna-aksen) 100%
+  );
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.1);
+}
+
+.konten-utama {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+.sidebar-kanan {
+  width: 260px;
+  min-width: 180px;
+  background: linear-gradient(120deg, #e3f2fd 60%, #bbdefb 100%);
+  box-shadow: 0 4px 24px rgba(25, 118, 210, 0.08);
+  border-radius: 18px;
+  padding: 24px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-left: 18px;
+  margin-top: 18px;
+  height: fit-content;
+}
+
+@media (max-width: 900px) {
+  .konten-utama {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .sidebar-kanan {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 18px;
+    flex-direction: row;
+    gap: 18px;
+    justify-content: center;
+  }
+  .sidebar-kanan .panel {
+    width: 90vw;
+    max-width: 400px;
+  }
+}
+
+.panel-inline {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  padding: 0 2px;
+  margin: 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.panel-inline label {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  margin-right: 4px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.panel-inline select {
+  background: #fff;
+  color: #222;
+  border-radius: 6px;
+  border: none;
+  padding: 4px 8px;
+  font-size: 13px;
+  min-width: 90px;
+  box-shadow: 0 1px 2px rgba(25, 118, 210, 0.06);
+  outline: none;
+  transition: box-shadow 0.2s;
+}
+.panel-inline select:focus {
+  box-shadow: 0 0 0 2px #90caf9;
+}
+.warna-panel {
+  gap: 8px;
+}
+.warna-panel label {
+  margin: 0 2px;
+  font-size: 0;
+}
+.warna-panel input[type="color"] {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 2px rgba(25, 118, 210, 0.1);
+  cursor: pointer;
+  padding: 0;
+}
+.icon-kuas::before {
+  content: "🎨";
+  font-size: 18px;
+  margin-right: 2px;
+  vertical-align: middle;
+}
+.icon-ember::before {
+  content: "🪣";
+  font-size: 18px;
+  margin-right: 2px;
+  vertical-align: middle;
+}
+.icon-shape::before {
+  content: "⬛";
+  font-size: 15px;
+  margin-right: 2px;
+  vertical-align: middle;
+}
+.icon-algo::before {
+  content: "⚙️";
+  font-size: 15px;
+  margin-right: 2px;
+  vertical-align: middle;
+}
+.icon-line::before {
+  content: "〰️";
+  font-size: 15px;
+  margin-right: 2px;
+  vertical-align: middle;
+}
+.footer-app {
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  color: #e3eaf7;
+  background: linear-gradient(to right, #1976d2, #2196f3);
+  padding: 10px 0 8px 0;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  position: relative;
+  bottom: 0;
+  left: 0;
+  z-index: 20;
+}
+
+body,
+html {
+  min-height: 100vh;
+  position: relative;
+}
