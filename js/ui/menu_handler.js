@@ -6,34 +6,47 @@
 function perbaruiOpsiAlgoritma() {
   const pilihAlgoritma = document.getElementById("pilihAlgoritma");
   const panelAlgoritma = pilihAlgoritma.parentElement;
+  const panelJenisGaris = document.getElementById("jenisGaris").parentElement;
+
+  // Default: sembunyikan semua
+  panelAlgoritma.style.display = "none";
+  panelJenisGaris.style.display = "none";
 
   pilihAlgoritma.innerHTML = ""; // Kosongkan opsi
 
   if (jenisObjek === "garis") {
-    panelAlgoritma.style.display = "block";
+    panelAlgoritma.style.display = "flex";
+    panelJenisGaris.style.display = "flex";
     pilihAlgoritma.innerHTML = `
       <option value="dda">DDA</option>
       <option value="bresenham">Bresenham</option>
     `;
     algoritmaTerpilih = pilihAlgoritma.value;
-  } else if (jenisObjek === "lingkaran") {
-    panelAlgoritma.style.display = "block";
-    pilihAlgoritma.innerHTML = `
-      <option value="midpoint">Midpoint</option>
-      <option value="simetris">Simetris Delapan Titik</option>
-      <option value="simetris_empat">Simetris Empat Titik</option>
-    `;
+  } else if (jenisObjek === "lingkaran" || jenisObjek === "elips") {
+    panelAlgoritma.style.display = "flex";
+    panelJenisGaris.style.display = "flex";
+    if (jenisObjek === "lingkaran") {
+      pilihAlgoritma.innerHTML = `
+        <option value="midpoint">Midpoint</option>
+        <option value="simetris">Simetris Delapan Titik</option>
+      `;
+    } else {
+      pilihAlgoritma.innerHTML = `
+        <option value="midpoint_elips">Midpoint</option>
+        <option value="simetris_empat_elips">Simetris Empat Titik</option>
+      `;
+    }
     algoritmaTerpilih = pilihAlgoritma.value;
-  } else if (jenisObjek === "elips") {
-    panelAlgoritma.style.display = "block";
-    pilihAlgoritma.innerHTML = `
-      <option value="midpoint_elips">Midpoint</option>
-      <option value="simetris_empat_elips">Simetris Empat Titik</option>
-    `;
-    algoritmaTerpilih = pilihAlgoritma.value;
-  } else {
-    panelAlgoritma.style.display = "none";
+  } else if (
+    jenisObjek === "persegi" ||
+    jenisObjek === "segitiga" ||
+    jenisObjek === "jajargenjang" ||
+    jenisObjek === "trapesium"
+  ) {
+    // Hanya tampilkan jenis garis untuk poligon
+    panelJenisGaris.style.display = "flex";
   }
+  // Untuk 'pena', kedua panel tetap tersembunyi (default)
 }
 
 // Fungsi untuk mengatur mode aplikasi (pilih, gambar, atau isi)

@@ -6,6 +6,7 @@ Aplikasi web paint sederhana yang dibuat sebagai bagian dari tugas mata kuliah G
 
 - **Menggambar Bentuk Dasar**: Pengguna dapat menggambar objek seperti:
 
+  - Pen (Menggambar bebas mengikuti kursor)
   - Garis
   - Persegi
   - Segitiga
@@ -17,8 +18,8 @@ Aplikasi web paint sederhana yang dibuat sebagai bagian dari tugas mata kuliah G
 - **Pilihan Algoritma**: Aplikasi ini mengimplementasikan beberapa algoritma klasik grafika komputer:
 
   - **Garis**: DDA dan Bresenham.
-  - **Lingkaran**: Midpoint Circle Algorithm.
-  - **Elips**: Midpoint Ellipse Algorithm.
+  - **Lingkaran**: Midpoint Circle dan Simetris 8 Titik.
+  - **Elips**: Midpoint Ellipse dan Simetris 4 Titik.
 
 - **Kustomisasi Garis dan Brush**:
 

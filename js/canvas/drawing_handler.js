@@ -2,11 +2,17 @@
  * Menangani semua logika yang berhubungan dengan menggambar di kanvas.
  */
 
+let titikPenaSementara = [];
+
 function mulaiMenggambar(e) {
   sedangMenggambar = true;
   const rect = kanvas.getBoundingClientRect();
   titikAwal.x = e.clientX - rect.left;
   titikAwal.y = e.clientY - rect.top;
+
+  if (jenisObjek === "pena") {
+    titikPenaSementara = [{ x: titikAwal.x, y: titikAwal.y }];
+  }
 }
 
 function sedangMenggambarObjek(e) {
@@ -15,6 +21,10 @@ function sedangMenggambarObjek(e) {
   const rect = kanvas.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
+
+  if (jenisObjek === "pena") {
+    titikPenaSementara.push({ x, y });
+  }
 
   gambarUlangSemuaObjek();
 
@@ -53,6 +63,7 @@ function sedangMenggambarObjek(e) {
         warnaGaris: warnaGaris,
         ketebalan: ketebalanGaris,
         jenisBrush: jenisBrush,
+        jenisGaris: jenisGaris,
       });
       const titikPersegi = hitungTitikPersegi(
         titikAwal.x,
@@ -172,6 +183,14 @@ function sedangMenggambarObjek(e) {
         );
       }
       break;
+    case "pena":
+      const plotterPena = createPlotterForObject({
+        warnaGaris: warnaGaris,
+        ketebalan: ketebalanGaris,
+        jenisBrush: jenisBrush,
+      });
+      gambarGoresanPena(plotterPena, titikPenaSementara);
+      break;
   }
 }
 
@@ -281,6 +300,16 @@ function selesaiMenggambar(e) {
         jenisBrush: jenisBrush,
       };
       break;
+    case "pena":
+      objekBaru = {
+        jenis: "pena",
+        titik: [...titikPenaSementara],
+        warnaGaris: warnaGaris,
+        ketebalan: ketebalanGaris,
+        jenisBrush: jenisBrush,
+      };
+      titikPenaSementara = [];
+      break;
   }
   if (objekBaru) {
     objekList.push(objekBaru);
@@ -305,9 +334,10 @@ function gambarObjek(objek) {
   }
   ctx.strokeStyle = objek.warnaGaris;
   ctx.fillStyle = objek.warnaIsi;
+  const plotter = createPlotterForObject(objek);
+
   switch (objek.jenis) {
     case "garis":
-      const plotter = createPlotterForObject(objek);
       const algoritmaGambarGaris =
         objek.algoritma === "bresenham"
           ? AlgoritmaBresenham.gambarGaris
@@ -322,9 +352,8 @@ function gambarObjek(objek) {
       );
       break;
     case "poligon":
-      const plotterPoligon = createPlotterForObject(objek);
       gambarPoligon(
-        plotterPoligon,
+        plotter,
         objek.titik,
         objek.warnaGaris,
         objek.warnaIsi,
@@ -423,6 +452,9 @@ function gambarObjek(objek) {
           objek.jenisGaris
         );
       }
+      break;
+    case "pena":
+      gambarGoresanPena(plotter, objek.titik);
       break;
   }
   ctx.shadowColor = "transparent";
@@ -752,4 +784,13 @@ function hexToRgb(hex) {
         parseInt(result[3], 16),
       ]
     : [0, 0, 0];
+}
+
+function gambarGoresanPena(plotter, titik) {
+  if (titik.length < 2) return;
+  for (let i = 0; i < titik.length - 1; i++) {
+    const p1 = titik[i];
+    const p2 = titik[i + 1];
+    AlgoritmaBresenham.gambarGaris(plotter, p1.x, p1.y, p2.x, p2.y, "solid");
+  }
 }
