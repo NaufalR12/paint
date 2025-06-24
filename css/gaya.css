@@ -448,16 +448,10 @@ input[type="color"] {
   vertical-align: middle;
 }
 .icon-line::before {
-  content: "⎯";
-  font-weight: bold;
-}
-.icon-pen::before {
-  content: "✎";
-  font-weight: bold;
-}
-.icon-brush::before {
-  content: "🖌";
-  font-weight: bold;
+  content: "〰️";
+  font-size: 15px;
+  margin-right: 2px;
+  vertical-align: middle;
 }
 .footer-app {
   width: 100%;
@@ -524,51 +518,4 @@ html {
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="black" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3 13h-2v-3h-4v3H8v-4c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2v4zM12 4c-1.93 0-3.5 1.57-3.5 3.5v.5h7v-.5C15.5 5.57 13.93 4 12 4z"/></svg>')
       1 1,
     auto;
-}
-
-/* Pengaturan Pen dan Brush */
-.grup-kontrol {
-  margin-bottom: 15px;
-}
-
-.grup-kontrol label {
-  display: block;
-  margin-bottom: 5px;
-  font-size: 12px;
-  color: var(--warna-teks);
-}
-
-.grup-kontrol input[type="range"] {
-  width: 100%;
-  margin-bottom: 5px;
-  -webkit-appearance: none;
-  height: 5px;
-  background: var(--warna-sekunder);
-  border-radius: 5px;
-  outline: none;
-}
-
-.grup-kontrol input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 15px;
-  height: 15px;
-  background: var(--warna-primer);
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.grup-kontrol span {
-  display: block;
-  text-align: right;
-  font-size: 11px;
-  color: var(--warna-teks);
-}
-
-#brushOptions {
-  display: none;
-}
-
-.mode-brush #brushOptions {
-  display: block;
 }

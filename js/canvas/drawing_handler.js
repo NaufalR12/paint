@@ -20,62 +20,119 @@ function sedangMenggambarObjek(e) {
 
   switch (jenisObjek) {
     case "garis":
+      // Buat plotter dari state global untuk preview
+      const plotterGaris = createPlotterForObject({
+        warnaGaris: warnaGaris,
+        ketebalan: ketebalanGaris,
+        jenisBrush: jenisBrush,
+      });
       if (algoritmaTerpilih === "dda") {
-        AlgoritmaDDA.gambarGaris(
-          ctx,
-          titikAwal.x,
-          titikAwal.y,
-          x,
-          y,
-          warnaGaris,
-          jenisGaris
-        );
+        AlgoritmaDDA.gambarGaris(plotterGaris, titikAwal.x, titikAwal.y, x, y);
       } else {
         AlgoritmaBresenham.gambarGaris(
-          ctx,
+          plotterGaris,
           titikAwal.x,
           titikAwal.y,
           x,
-          y,
-          warnaGaris,
-          jenisGaris
+          y
         );
       }
       break;
     case "persegi":
-      gambarPersegi(titikAwal.x, titikAwal.y, x - titikAwal.x, y - titikAwal.y);
+      // Buat plotter dari state global untuk preview
+      const plotterPersegi = createPlotterForObject({
+        warnaGaris: warnaGaris,
+        ketebalan: ketebalanGaris,
+        jenisBrush: jenisBrush,
+      });
+      const titikPersegi = hitungTitikPersegi(
+        titikAwal.x,
+        titikAwal.y,
+        x - titikAwal.x,
+        y - titikAwal.y
+      );
+      gambarPoligon(
+        plotterPersegi,
+        titikPersegi,
+        warnaGaris,
+        null,
+        "bresenham"
+      );
       break;
     case "segitiga":
-      gambarSegitiga(titikAwal.x, titikAwal.y, x, y);
+      // Buat plotter dari state global untuk preview
+      const plotterSegitiga = createPlotterForObject({
+        warnaGaris: warnaGaris,
+        ketebalan: ketebalanGaris,
+        jenisBrush: jenisBrush,
+      });
+      const titikSegitiga = hitungTitikSegitiga(titikAwal.x, titikAwal.y, x, y);
+      gambarPoligon(
+        plotterSegitiga,
+        titikSegitiga,
+        warnaGaris,
+        warnaIsi,
+        "bresenham"
+      );
       break;
     case "jajargenjang":
-      gambarJajargenjang(titikAwal.x, titikAwal.y, x, y);
+      // Buat plotter dari state global untuk preview
+      const plotterJajargenjang = createPlotterForObject({
+        warnaGaris: warnaGaris,
+        ketebalan: ketebalanGaris,
+        jenisBrush: jenisBrush,
+      });
+      const titikJajargenjang = hitungTitikJajargenjang(
+        titikAwal.x,
+        titikAwal.y,
+        x,
+        y
+      );
+      gambarPoligon(
+        plotterJajargenjang,
+        titikJajargenjang,
+        warnaGaris,
+        warnaIsi,
+        "bresenham"
+      );
       break;
     case "trapesium":
-      gambarTrapesium(titikAwal.x, titikAwal.y, x, y);
+      // Buat plotter dari state global untuk preview
+      const plotterTrapesium = createPlotterForObject({
+        warnaGaris: warnaGaris,
+        ketebalan: ketebalanGaris,
+        jenisBrush: jenisBrush,
+      });
+      const titikTrapesium = hitungTitikTrapesium(
+        titikAwal.x,
+        titikAwal.y,
+        x,
+        y
+      );
+      gambarPoligon(
+        plotterTrapesium,
+        titikTrapesium,
+        warnaGaris,
+        warnaIsi,
+        "bresenham"
+      );
       break;
     case "lingkaran":
       const radius = Math.sqrt(
         Math.pow(x - titikAwal.x, 2) + Math.pow(y - titikAwal.y, 2)
       );
-      let algoritmaLingkaranPreview;
-      if (algoritmaTerpilih === "midpoint") {
-        algoritmaLingkaranPreview = AlgoritmaMidpointLingkaran.gambarLingkaran;
-      } else if (algoritmaTerpilih === "simetris") {
-        algoritmaLingkaranPreview =
-          AlgoritmaSimetrisDelapanTitik.gambarLingkaran;
-      } else {
-        // simetris_empat
-        algoritmaLingkaranPreview = AlgoritmaSimetrisEmpatTitik.gambarLingkaran;
-      }
-      algoritmaLingkaranPreview(
-        ctx,
+      // Buat plotter dari state global untuk preview
+      const plotterPreview = createPlotterForObject({
+        warnaGaris: warnaGaris,
+        ketebalan: ketebalanGaris,
+        jenisBrush: jenisBrush,
+      });
+      // TODO: Tambahkan algoritma lain nanti
+      AlgoritmaMidpointLingkaran.gambarLingkaran(
+        plotterPreview,
         titikAwal.x,
         titikAwal.y,
-        radius,
-        warnaGaris,
-        warnaIsi,
-        jenisGaris
+        radius
       );
       break;
     case "elips":
@@ -124,9 +181,10 @@ function selesaiMenggambar(e) {
         y1: titikAwal.y,
         x2: x,
         y2: y,
-        warnaGaris,
-        jenisGaris,
+        warnaGaris: warnaGaris,
         algoritma: algoritmaTerpilih,
+        ketebalan: ketebalanGaris,
+        jenisBrush: jenisBrush,
       };
       break;
     case "persegi":
@@ -138,20 +196,24 @@ function selesaiMenggambar(e) {
           x - titikAwal.x,
           y - titikAwal.y
         ),
-        warnaGaris,
-        warnaIsi,
-        jenisGaris,
+        warnaGaris: warnaGaris,
+        warnaIsi: warnaIsi,
+        jenisGaris: jenisGaris,
         algoritmaGaris: "bresenham",
+        ketebalan: ketebalanGaris,
+        jenisBrush: jenisBrush,
       };
       break;
     case "segitiga":
       objekBaru = {
         jenis: "poligon",
         titik: hitungTitikSegitiga(titikAwal.x, titikAwal.y, x, y),
-        warnaGaris,
-        warnaIsi,
-        jenisGaris,
+        warnaGaris: warnaGaris,
+        warnaIsi: warnaIsi,
+        jenisGaris: jenisGaris,
         algoritmaGaris: "bresenham",
+        ketebalan: ketebalanGaris,
+        jenisBrush: jenisBrush,
       };
       break;
     case "lingkaran":
@@ -162,10 +224,12 @@ function selesaiMenggambar(e) {
         radius: Math.sqrt(
           Math.pow(x - titikAwal.x, 2) + Math.pow(y - titikAwal.y, 2)
         ),
-        warnaGaris,
-        warnaIsi,
-        jenisGaris,
+        warnaGaris: warnaGaris,
+        warnaIsi: warnaIsi,
+        jenisGaris: jenisGaris,
         algoritma: algoritmaTerpilih,
+        ketebalan: ketebalanGaris,
+        jenisBrush: jenisBrush,
       };
       break;
     case "elips":
@@ -175,30 +239,36 @@ function selesaiMenggambar(e) {
         yc: titikAwal.y,
         rx: Math.abs(x - titikAwal.x),
         ry: Math.abs(y - titikAwal.y),
-        warnaGaris,
-        warnaIsi,
-        jenisGaris,
+        warnaGaris: warnaGaris,
+        warnaIsi: warnaIsi,
+        jenisGaris: jenisGaris,
         algoritma: algoritmaTerpilih,
+        ketebalan: ketebalanGaris,
+        jenisBrush: jenisBrush,
       };
       break;
     case "jajargenjang":
       objekBaru = {
         jenis: "poligon",
         titik: hitungTitikJajargenjang(titikAwal.x, titikAwal.y, x, y),
-        warnaGaris,
-        warnaIsi,
-        jenisGaris,
+        warnaGaris: warnaGaris,
+        warnaIsi: warnaIsi,
+        jenisGaris: jenisGaris,
         algoritmaGaris: "bresenham",
+        ketebalan: ketebalanGaris,
+        jenisBrush: jenisBrush,
       };
       break;
     case "trapesium":
       objekBaru = {
         jenis: "poligon",
         titik: hitungTitikTrapesium(titikAwal.x, titikAwal.y, x, y),
-        warnaGaris,
-        warnaIsi,
-        jenisGaris,
+        warnaGaris: warnaGaris,
+        warnaIsi: warnaIsi,
+        jenisGaris: jenisGaris,
         algoritmaGaris: "bresenham",
+        ketebalan: ketebalanGaris,
+        jenisBrush: jenisBrush,
       };
       break;
   }
@@ -227,60 +297,47 @@ function gambarObjek(objek) {
   ctx.fillStyle = objek.warnaIsi;
   switch (objek.jenis) {
     case "garis":
+      const plotter = createPlotterForObject(objek);
       const algoritmaGambarGaris =
         objek.algoritma === "bresenham"
           ? AlgoritmaBresenham.gambarGaris
           : AlgoritmaDDA.gambarGaris;
-      algoritmaGambarGaris(
-        ctx,
-        objek.x1,
-        objek.y1,
-        objek.x2,
-        objek.y2,
-        objek.warnaGaris,
-        objek.jenisGaris
-      );
+      algoritmaGambarGaris(plotter, objek.x1, objek.y1, objek.x2, objek.y2);
       break;
     case "poligon":
+      const plotterPoligon = createPlotterForObject(objek);
       gambarPoligon(
+        plotterPoligon,
         objek.titik,
         objek.warnaGaris,
         objek.warnaIsi,
-        objek.jenisGaris,
         objek.algoritmaGaris,
         objek.algoritmaIsi
       );
       break;
     case "lingkaran":
-      let algoritmaGambarLingkaran;
-      if (objek.algoritma === "midpoint") {
-        algoritmaGambarLingkaran = AlgoritmaMidpointLingkaran.gambarLingkaran;
-      } else if (objek.algoritma === "simetris") {
-        algoritmaGambarLingkaran =
-          AlgoritmaSimetrisDelapanTitik.gambarLingkaran;
-      } else {
-        algoritmaGambarLingkaran = AlgoritmaSimetrisEmpatTitik.gambarLingkaran;
-      }
+      const plotterFinal = createPlotterForObject(objek);
 
-      // Selalu gambar batas solid terlebih dahulu untuk pengisian yang andal
-      algoritmaGambarLingkaran(
-        ctx,
-        objek.xc,
-        objek.yc,
-        objek.radius,
-        objek.warnaGaris,
-        null,
-        "solid"
-      );
-
-      // Kemudian, lakukan pengisian
       if (objek.warnaIsi && objek.warnaIsi !== "#ffffff") {
+        // Gambar batas solid dulu untuk pengisian
+        const plotterBatasIsi = createPlotterForObject({
+          ...objek,
+          jenisBrush: "pena",
+          ketebalan: 1,
+        });
+        AlgoritmaMidpointLingkaran.gambarLingkaran(
+          plotterBatasIsi,
+          objek.xc,
+          objek.yc,
+          objek.radius
+        );
+
+        // Lakukan pengisian
         const startX = Math.floor(objek.xc);
         const startY = Math.floor(objek.yc);
         if (objek.algoritmaIsi === "flood-fill") {
           AlgoritmaIsiArea.floodFill(ctx, startX, startY, objek.warnaIsi);
         } else {
-          // boundary-fill dan inside-outside
           AlgoritmaIsiArea.boundaryFill(
             ctx,
             startX,
@@ -291,18 +348,13 @@ function gambarObjek(objek) {
         }
       }
 
-      // Gambar ulang batas dengan style yang benar jika bukan solid
-      if (objek.jenisGaris !== "solid") {
-        algoritmaGambarLingkaran(
-          ctx,
-          objek.xc,
-          objek.yc,
-          objek.radius,
-          objek.warnaGaris,
-          null,
-          objek.jenisGaris
-        );
-      }
+      // Gambar garis batas akhir dengan brush yang benar
+      AlgoritmaMidpointLingkaran.gambarLingkaran(
+        plotterFinal,
+        objek.xc,
+        objek.yc,
+        objek.radius
+      );
       break;
     case "elips":
       let algoritmaGambarElips;
@@ -517,10 +569,10 @@ function gambarTrapesium(x1, y1, x2, y2) {
 }
 
 function gambarPoligon(
+  plotter,
   titik,
   warnaGaris,
   warnaIsi,
-  jenisGaris,
   algoritma,
   algoritmaIsi = "inside-outside"
 ) {
@@ -529,15 +581,25 @@ function gambarPoligon(
       ? AlgoritmaBresenham.gambarGaris
       : AlgoritmaDDA.gambarGaris;
 
-  // Jika perlu diisi, gambar batas terlebih dahulu
+  // Jika perlu diisi, gambar batas sementara dan panggil algoritma isi
   if (warnaIsi && warnaIsi !== "#ffffff" && titik.length > 2) {
-    // Untuk algoritma yang memerlukan batas (boundary/flood), gambar batas solid sementara
-    if (
-      algoritmaIsi === "boundary-fill" ||
-      algoritmaIsi === "flood-fill" ||
-      algoritmaIsi === "inside-outside"
-    ) {
-      gambarGarisBatasSementara(titik, warnaGaris, algoritma);
+    if (algoritmaIsi !== "scan-line") {
+      // Gambar batas solid sementara untuk boundary/flood fill
+      const plotterBatasIsi = createPlotterForObject({
+        warnaGaris: warnaGaris,
+        ketebalan: 1,
+        jenisBrush: "pena",
+      });
+      for (let i = 0; i < titik.length; i++) {
+        const j = (i + 1) % titik.length;
+        algoritmaGambar(
+          plotterBatasIsi,
+          titik[i][0],
+          titik[i][1],
+          titik[j][0],
+          titik[j][1]
+        );
+      }
     }
 
     // Hitung titik tengah untuk memulai pengisian
@@ -556,7 +618,7 @@ function gambarPoligon(
         AlgoritmaScanLine.isiPoligon(ctx, titik, warnaIsi);
         break;
       case "boundary-fill":
-      case "inside-outside": // Menggunakan boundary fill
+      case "inside-outside":
         AlgoritmaIsiArea.boundaryFill(ctx, cx, cy, warnaIsi, warnaGaris);
         break;
       case "flood-fill":
@@ -565,37 +627,15 @@ function gambarPoligon(
     }
   }
 
-  // Gambar garis batas akhir di atas isian dengan style yang benar
+  // Gambar garis batas akhir menggunakan plotter yang diberikan
   for (let i = 0; i < titik.length; i++) {
     const j = (i + 1) % titik.length;
     algoritmaGambar(
-      ctx,
+      plotter,
       titik[i][0],
       titik[i][1],
       titik[j][0],
-      titik[j][1],
-      warnaGaris,
-      jenisGaris
-    );
-  }
-}
-
-// Fungsi helper untuk menggambar garis batas sementara (solid) untuk boundary fill
-function gambarGarisBatasSementara(titik, warnaGaris, algoritma) {
-  const algoritmaGambar =
-    algoritma === "bresenham"
-      ? AlgoritmaBresenham.gambarGaris
-      : AlgoritmaDDA.gambarGaris;
-  for (let i = 0; i < titik.length; i++) {
-    const j = (i + 1) % titik.length;
-    algoritmaGambar(
-      ctx,
-      titik[i][0],
-      titik[i][1],
-      titik[j][0],
-      titik[j][1],
-      warnaGaris,
-      "solid" // Gunakan solid untuk boundary fill
+      titik[j][1]
     );
   }
 }
@@ -638,4 +678,61 @@ function isiArea(e) {
     objekDitemukan.warnaIsi = warnaIsi;
     gambarUlangSemuaObjek();
   }
+}
+
+/**
+ * Membuat fungsi plotter yang dikonfigurasi dengan properti brush dari sebuah objek.
+ * @param {object} objek - Objek yang akan digambar (harus memiliki properti warnaGaris, ketebalan, jenisBrush).
+ * @returns {function(number, number): void} - Fungsi plotter yang siap digunakan.
+ */
+function createPlotterForObject(objek) {
+  const tebal = objek.ketebalan || 1;
+  const warna = objek.warnaGaris || "#000000";
+  const brush = objek.jenisBrush || "pena";
+  const warnaRgb = hexToRgb(warna);
+
+  return function (x, y) {
+    ctx.fillStyle = warna;
+    ctx.beginPath();
+
+    switch (brush) {
+      case "spidol":
+        ctx.fillRect(x - tebal / 2, y - tebal / 2, tebal, tebal);
+        break;
+
+      case "pensil":
+        for (let i = 0; i < tebal * 2; i++) {
+          const offsetX = (Math.random() - 0.5) * tebal;
+          const offsetY = (Math.random() - 0.5) * tebal;
+          const alpha = 0.5 - Math.random() * 0.3;
+          ctx.fillStyle = `rgba(${warnaRgb.join(",")}, ${alpha})`;
+          ctx.fillRect(x + offsetX, y + offsetY, 1, 1);
+        }
+        break;
+
+      case "cat-air":
+        ctx.globalAlpha = 0.1;
+        ctx.arc(x, y, tebal * (Math.random() * 0.5 + 0.5), 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.globalAlpha = 1.0;
+        break;
+
+      case "pena":
+      default:
+        ctx.arc(x, y, tebal / 2, 0, 2 * Math.PI);
+        ctx.fill();
+        break;
+    }
+  };
+}
+
+function hexToRgb(hex) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? [
+        parseInt(result[1], 16),
+        parseInt(result[2], 16),
+        parseInt(result[3], 16),
+      ]
+    : [0, 0, 0];
 }

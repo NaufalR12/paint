@@ -2,8 +2,6 @@
  * Menangani logika untuk interaksi dengan menu dan UI.
  */
 
-let drawingTools;
-
 // Fungsi untuk memperbarui opsi dropdown algoritma berdasarkan bentuk yang dipilih
 function perbaruiOpsiAlgoritma() {
   const pilihAlgoritma = document.getElementById("pilihAlgoritma");
@@ -38,7 +36,7 @@ function perbaruiOpsiAlgoritma() {
   }
 }
 
-// Fungsi untuk mengatur mode aplikasi (pilih, gambar, isi, pen, atau brush)
+// Fungsi untuk mengatur mode aplikasi (pilih, gambar, atau isi)
 function setelMode(modeBaru) {
   mode = modeBaru;
 
@@ -46,23 +44,16 @@ function setelMode(modeBaru) {
   const btnModePilih = document.getElementById("btnModePilih");
   const btnModeGambar = document.getElementById("btnModeGambar");
   const btnModeIsi = document.getElementById("btnModeIsi");
-  const btnModePen = document.getElementById("btnModePen");
-  const btnModeBrush = document.getElementById("btnModeBrush");
   const panelTransformasi = document.getElementById("panelTransformasi");
   const panelIsi = document.getElementById("panelIsi");
-  const panelPenBrush = document.getElementById("panelPenBrush");
 
   // Reset semua tombol dan panel
   btnModePilih.classList.remove("aktif");
   btnModeGambar.classList.remove("aktif");
   btnModeIsi.classList.remove("aktif");
-  btnModePen.classList.remove("aktif");
-  btnModeBrush.classList.remove("aktif");
   panelTransformasi.classList.add("sembunyi");
   panelIsi.classList.add("sembunyi");
-  panelPenBrush.classList.add("sembunyi");
   kanvas.classList.remove("cursor-isi");
-  document.body.classList.remove("mode-brush");
   kanvas.style.cursor = "default";
 
   // Atur status aktif berdasarkan mode
@@ -76,64 +67,99 @@ function setelMode(modeBaru) {
     kanvas.classList.add("cursor-isi");
     btnModeIsi.classList.add("aktif");
     panelIsi.classList.remove("sembunyi");
-  } else if (mode === "pen") {
-    kanvas.style.cursor = "crosshair";
-    btnModePen.classList.add("aktif");
-    panelPenBrush.classList.remove("sembunyi");
-    if (drawingTools) drawingTools.setTool("pen");
-  } else if (mode === "brush") {
-    kanvas.style.cursor = "crosshair";
-    btnModeBrush.classList.add("aktif");
-    panelPenBrush.classList.remove("sembunyi");
-    document.body.classList.add("mode-brush");
-    if (drawingTools) drawingTools.setTool("brush");
   }
 }
 
-// Inisialisasi event listener untuk pengaturan pen dan brush
-function inisialisasiPenBrush() {
-  drawingTools = new DrawingTools(kanvas, ctx);
+document.addEventListener("DOMContentLoaded", function () {
+  // Tombol Mode Utama
+  const btnModePilih = document.getElementById("btnModePilih");
+  const btnModeGambar = document.getElementById("btnModeGambar");
+  const btnModeIsi = document.getElementById("btnModeIsi");
 
-  // Event listener untuk ukuran
-  const ukuranGaris = document.getElementById("ukuranGaris");
-  const ukuranGarisValue = document.getElementById("ukuranGarisValue");
+  // Panel Kontrol
+  const panelBentuk = document.getElementById("panel-bentuk");
+  const panelBrush = document.getElementById("panelBrush");
+  const panelIsi = document.getElementById("panelIsi");
+  const panelTransformasi = document.getElementById("panelTransformasi");
 
-  ukuranGaris.addEventListener("input", (e) => {
-    const value = e.target.value;
-    ukuranGarisValue.textContent = value + "px";
-    drawingTools.setSize(parseInt(value));
+  // Kontrol Spesifik
+  const ketebalanGarisSlider = document.getElementById("ketebalanGaris");
+  const nilaiKetebalanSpan = document.getElementById("nilaiKetebalan");
+  const jenisBrushDropdown = document.getElementById("jenisBrush");
+
+  // Event Listener untuk Slider Ketebalan
+  ketebalanGarisSlider.addEventListener("input", (e) => {
+    ketebalanGaris = parseInt(e.target.value, 10);
+    nilaiKetebalanSpan.textContent = `${ketebalanGaris}px`;
   });
 
-  // Event listener untuk opacity
-  const opacityGaris = document.getElementById("opacityGaris");
-  const opacityGarisValue = document.getElementById("opacityGarisValue");
-
-  opacityGaris.addEventListener("input", (e) => {
-    const value = e.target.value;
-    opacityGarisValue.textContent = value + "%";
-    drawingTools.setOpacity(value / 100);
+  // Event Listener untuk Dropdown Jenis Brush
+  jenisBrushDropdown.addEventListener("change", (e) => {
+    jenisBrush = e.target.value;
   });
 
-  // Event listener untuk tekstur brush
-  const teksturBrush = document.getElementById("teksturBrush");
-  teksturBrush.addEventListener("change", (e) => {
-    drawingTools.setTexture(e.target.value);
+  // Fungsi untuk mengatur visibilitas panel berdasarkan mode
+  function aturPanelAktif() {
+    // Sembunyikan semua panel terlebih dahulu
+    panelBentuk.classList.add("sembunyi");
+    panelBrush.classList.add("sembunyi");
+    panelIsi.classList.add("sembunyi");
+    panelTransformasi.classList.add("sembunyi");
+
+    // Tampilkan panel berdasarkan mode saat ini
+    if (mode === "gambar") {
+      panelBentuk.classList.remove("sembunyi");
+      panelBrush.classList.remove("sembunyi"); // Tampilkan juga panel brush saat menggambar
+    } else if (mode === "isi") {
+      panelIsi.classList.remove("sembunyi");
+    } else if (mode === "pilih") {
+      // Jika ada objek terpilih, tampilkan panel transformasi
+      if (objekTerpilih) {
+        panelTransformasi.classList.remove("sembunyi");
+      }
+    }
+  }
+
+  // Event Listener untuk Tombol Mode
+  btnModePilih.addEventListener("click", () => {
+    mode = "pilih";
+    perbaruiStatusTombolMode();
   });
 
-  // Event listener untuk warna
-  const warnaGaris = document.getElementById("warnaGaris");
-  warnaGaris.addEventListener("input", (e) => {
-    drawingTools.setColor(e.target.value);
+  btnModeGambar.addEventListener("click", () => {
+    mode = "gambar";
+    perbaruiStatusTombolMode();
   });
 
-  // Event listener untuk tombol mode
-  document
-    .getElementById("btnModePen")
-    .addEventListener("click", () => setelMode("pen"));
-  document
-    .getElementById("btnModeBrush")
-    .addEventListener("click", () => setelMode("brush"));
-}
+  btnModeIsi.addEventListener("click", () => {
+    mode = "isi";
+    perbaruiStatusTombolMode();
+  });
 
-// Panggil fungsi inisialisasi setelah DOM dimuat
-document.addEventListener("DOMContentLoaded", inisialisasiPenBrush);
+  // Fungsi untuk memperbarui tampilan tombol mode dan panel
+  function perbaruiStatusTombolMode() {
+    // Update kelas 'aktif' pada tombol
+    btnModePilih.classList.toggle("aktif", mode === "pilih");
+    btnModeGambar.classList.toggle("aktif", mode === "gambar");
+    btnModeIsi.classList.toggle("aktif", mode === "isi");
+
+    // Update kursor kanvas
+    kanvas.classList.remove("kursor-isi", "kursor-pilih", "kursor-gambar");
+    if (mode === "isi") {
+      kanvas.classList.add("kursor-isi");
+    } else if (mode === "pilih") {
+      kanvas.classList.add("kursor-pilih");
+    } else {
+      kanvas.classList.add("kursor-gambar");
+    }
+
+    // Perbarui panel yang terlihat
+    aturPanelAktif();
+  }
+
+  // Panggil saat objek dipilih atau tidak dipilih untuk memperbarui panel transformasi
+  window.addEventListener("objekterpilihubah", aturPanelAktif);
+
+  // Inisialisasi awal
+  perbaruiStatusTombolMode();
+});

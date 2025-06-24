@@ -3,113 +3,47 @@
  */
 class AlgoritmaMidpointLingkaran {
   /**
-   * Menggambar lingkaran menggunakan algoritma Midpoint
-   * @param {CanvasRenderingContext2D} ctx - Context canvas
-   * @param {number} xPusat - Koordinat x titik pusat
-   * @param {number} yPusat - Koordinat y titik pusat
-   * @param {number} radius - Radius lingkaran
-   * @param {string} warnaGaris - Warna garis lingkaran
-   * @param {string} warnaIsi - Warna isi lingkaran (opsional)
-   * @param {string} jenisGaris - Jenis garis (solid, dashed, dotted, dashdot)
+   * Menggambar delapan titik simetris untuk lingkaran.
+   * @param {function(number, number): void} plotter - Fungsi untuk menggambar satu titik (x, y).
+   * @param {number} xc - Koordinat x pusat.
+   * @param {number} yc - Koordinat y pusat.
+   * @param {number} x - Offset x dari pusat.
+   * @param {number} y - Offset y dari pusat.
    */
-  static gambarLingkaran(
-    ctx,
-    xPusat,
-    yPusat,
-    radius,
-    warnaGaris,
-    warnaIsi = null,
-    jenisGaris = "solid"
-  ) {
-    // Konversi ke integer
-    xPusat = Math.round(xPusat);
-    yPusat = Math.round(yPusat);
-    radius = Math.round(radius);
+  static gambarDelapanTitik(plotter, xc, yc, x, y) {
+    plotter(xc + x, yc + y);
+    plotter(xc - x, yc + y);
+    plotter(xc + x, yc - y);
+    plotter(xc - x, yc - y);
+    plotter(xc + y, yc + x);
+    plotter(xc - y, yc + x);
+    plotter(xc + y, yc - x);
+    plotter(xc - y, yc - x);
+  }
 
-    // Inisialisasi variabel
-    let x = radius;
-    let y = 0;
-    let p = 1 - radius;
+  /**
+   * Menggambar lingkaran menggunakan algoritma Midpoint dan plotter kustom.
+   * @param {function(number, number): void} plotter - Fungsi untuk menggambar satu titik (x, y).
+   * @param {number} xc - Koordinat x pusat.
+   * @param {number} yc - Koordinat y pusat.
+   * @param {number} r - Radius lingkaran.
+   */
+  static gambarLingkaran(plotter, xc, yc, r) {
+    let x = 0;
+    let y = Math.round(r);
+    let p = 1 - y;
 
-    // Pola garis
-    let pola;
-    switch (jenisGaris) {
-      case "dashed":
-        pola = [5, 5]; // 5 pixel on, 5 pixel off
-        break;
-      case "dotted":
-        pola = [2, 2]; // 2 pixel on, 2 pixel off
-        break;
-      case "dashdot":
-        pola = [5, 2, 2, 2]; // 5 on, 2 off, 2 on, 2 off
-        break;
-      default:
-        pola = null; // Solid line
-    }
+    this.gambarDelapanTitik(plotter, xc, yc, x, y);
 
-    let indeksPola = 0;
-    let hitungPola = 0;
-    let gambar = true;
-
-    // Array untuk menyimpan titik-titik lingkaran
-    const titik = [];
-
-    // Fungsi untuk menambah titik
-    const tambahTitik = (x, y) => {
-      if (pola === null || gambar) {
-        titik.push([x, y]);
-      }
-      // Update pola garis jika bukan solid
-      if (pola !== null) {
-        hitungPola++;
-        if (hitungPola >= pola[indeksPola]) {
-          hitungPola = 0;
-          indeksPola = (indeksPola + 1) % pola.length;
-          gambar = !gambar;
-        }
-      }
-    };
-
-    // Gambar titik-titik menggunakan simetri lingkaran
-    while (x >= y) {
-      tambahTitik(xPusat + x, yPusat + y);
-      tambahTitik(xPusat - x, yPusat + y);
-      tambahTitik(xPusat + x, yPusat - y);
-      tambahTitik(xPusat - x, yPusat - y);
-      tambahTitik(xPusat + y, yPusat + x);
-      tambahTitik(xPusat - y, yPusat + x);
-      tambahTitik(xPusat + y, yPusat - x);
-      tambahTitik(xPusat - y, yPusat - x);
-
-      y++;
-
-      if (p <= 0) {
-        p = p + 2 * y + 1;
+    while (x < y) {
+      x++;
+      if (p < 0) {
+        p += 2 * x + 1;
       } else {
-        x--;
-        p = p + 2 * y - 2 * x + 1;
+        y--;
+        p += 2 * (x - y) + 1;
       }
-    }
-
-    // Gambar titik-titik
-    if (warnaIsi) {
-      // Isi lingkaran
-      ctx.fillStyle = warnaIsi;
-      ctx.beginPath();
-      for (let i = 0; i < titik.length; i++) {
-        if (i === 0) {
-          ctx.moveTo(titik[i][0], titik[i][1]);
-        } else {
-          ctx.lineTo(titik[i][0], titik[i][1]);
-        }
-      }
-      ctx.fill();
-    }
-
-    // Gambar garis lingkaran
-    ctx.fillStyle = warnaGaris;
-    for (const [x, y] of titik) {
-      ctx.fillRect(x, y, 1, 1);
+      this.gambarDelapanTitik(plotter, xc, yc, x, y);
     }
   }
 }
