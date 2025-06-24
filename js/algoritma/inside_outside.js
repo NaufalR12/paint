@@ -25,20 +25,33 @@ const AlgoritmaInsideOutside = (() => {
       if (titik[i][1] < minY) minY = titik[i][1];
       if (titik[i][1] > maxY) maxY = titik[i][1];
     }
-    minX = Math.floor(minX);
-    maxX = Math.ceil(maxX);
-    minY = Math.floor(minY);
-    maxY = Math.ceil(maxY);
+    // Batasi bounding box ke ukuran kanvas
+    minX = Math.max(0, Math.floor(minX));
+    maxX = Math.min(ctx.canvas.width - 1, Math.ceil(maxX));
+    minY = Math.max(0, Math.floor(minY));
+    maxY = Math.min(ctx.canvas.height - 1, Math.ceil(maxY));
 
+    let countFilled = 0;
     // Untuk setiap piksel dalam bounding box, cek inside-outside
     for (let y = minY; y <= maxY; y++) {
       for (let x = minX; x <= maxX; x++) {
         if (isInsidePolygon(x, y, titik)) {
           ctx.fillRect(x, y, 1, 1);
+          countFilled++;
         }
       }
     }
     ctx.restore();
+    // Log jumlah piksel yang diisi untuk debug
+    console.log(
+      "[Inside-Outside] Jumlah piksel diisi:",
+      countFilled,
+      "Bounding box:",
+      minX,
+      minY,
+      maxX,
+      maxY
+    );
   }
 
   // Fungsi even-odd rule (ray casting)

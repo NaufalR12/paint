@@ -665,10 +665,28 @@ function gambarPoligon(
       ? AlgoritmaBresenham.gambarGaris
       : AlgoritmaDDA.gambarGaris;
 
-  // Jika perlu diisi, gambar batas sementara dan panggil algoritma isi
+  // Jika perlu diisi, gambar area dulu
   if (warnaIsi && warnaIsi !== "#ffffff" && titik.length > 2) {
+    let titikArray = titik;
+    // Konversi jika formatnya array of object {x, y}
+    if (
+      titikArray.length > 0 &&
+      typeof titikArray[0] === "object" &&
+      "x" in titikArray[0] &&
+      "y" in titikArray[0]
+    ) {
+      titikArray = titikArray.map((p) => [p.x, p.y]);
+    }
+    // Hapus titik terakhir jika sama dengan titik pertama (untuk poligon tertutup)
+    if (
+      titikArray.length > 2 &&
+      titikArray[0][0] === titikArray[titikArray.length - 1][0] &&
+      titikArray[0][1] === titikArray[titikArray.length - 1][1]
+    ) {
+      titikArray = titikArray.slice(0, -1);
+    }
     if (algoritmaIsi === "inside-outside") {
-      AlgoritmaInsideOutside.isiPoligon(ctx, titik, warnaIsi);
+      AlgoritmaInsideOutside.isiPoligon(ctx, titikArray, warnaIsi);
     } else if (algoritmaIsi !== "scan-line") {
       // Gambar batas solid sementara untuk boundary/flood fill
       const plotterBatasIsi = createPlotterForObject({
@@ -676,14 +694,14 @@ function gambarPoligon(
         ketebalan: 1,
         jenisBrush: "pena",
       });
-      for (let i = 0; i < titik.length; i++) {
-        const j = (i + 1) % titik.length;
+      for (let i = 0; i < titikArray.length; i++) {
+        const j = (i + 1) % titikArray.length;
         algoritmaGambar(
           plotterBatasIsi,
-          titik[i][0],
-          titik[i][1],
-          titik[j][0],
-          titik[j][1]
+          titikArray[i][0],
+          titikArray[i][1],
+          titikArray[j][0],
+          titikArray[j][1]
         );
       }
     }
@@ -691,17 +709,17 @@ function gambarPoligon(
     // Hitung titik tengah untuk memulai pengisian
     let cx = 0,
       cy = 0;
-    titik.forEach((p) => {
+    titikArray.forEach((p) => {
       cx += p[0];
       cy += p[1];
     });
-    cx = Math.floor(cx / titik.length);
-    cy = Math.floor(cy / titik.length);
+    cx = Math.floor(cx / titikArray.length);
+    cy = Math.floor(cy / titikArray.length);
 
     // Lakukan pengisian
     switch (algoritmaIsi) {
       case "scan-line":
-        AlgoritmaScanLine.isiPoligon(ctx, titik, warnaIsi);
+        AlgoritmaScanLine.isiPoligon(ctx, titikArray, warnaIsi);
         break;
       case "boundary-fill":
         AlgoritmaIsiArea.boundaryFill(ctx, cx, cy, warnaIsi, warnaGaris);
@@ -712,7 +730,7 @@ function gambarPoligon(
     }
   }
 
-  // Gambar garis batas akhir menggunakan plotter yang diberikan
+  // Setelah area diisi, gambar outline di atasnya
   for (let i = 0; i < titik.length; i++) {
     const j = (i + 1) % titik.length;
     algoritmaGambar(
