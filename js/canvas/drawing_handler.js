@@ -247,7 +247,8 @@ function gambarObjek(objek) {
         objek.warnaGaris,
         objek.warnaIsi,
         objek.jenisGaris,
-        objek.algoritmaGaris
+        objek.algoritmaGaris,
+        objek.algoritmaIsi
       );
       break;
     case "lingkaran":
@@ -258,41 +259,98 @@ function gambarObjek(objek) {
         algoritmaGambarLingkaran =
           AlgoritmaSimetrisDelapanTitik.gambarLingkaran;
       } else {
-        // simetris_empat
         algoritmaGambarLingkaran = AlgoritmaSimetrisEmpatTitik.gambarLingkaran;
       }
+
+      // Selalu gambar batas solid terlebih dahulu untuk pengisian yang andal
       algoritmaGambarLingkaran(
         ctx,
         objek.xc,
         objek.yc,
         objek.radius,
         objek.warnaGaris,
-        objek.warnaIsi,
-        objek.jenisGaris
+        null,
+        "solid"
       );
-      break;
-    case "elips":
-      if (objek.algoritma === "midpoint_elips") {
-        AlgoritmaMidpointElips.gambarElips(
+
+      // Kemudian, lakukan pengisian
+      if (objek.warnaIsi && objek.warnaIsi !== "#ffffff") {
+        const startX = Math.floor(objek.xc);
+        const startY = Math.floor(objek.yc);
+        if (objek.algoritmaIsi === "flood-fill") {
+          AlgoritmaIsiArea.floodFill(ctx, startX, startY, objek.warnaIsi);
+        } else {
+          // boundary-fill dan inside-outside
+          AlgoritmaIsiArea.boundaryFill(
+            ctx,
+            startX,
+            startY,
+            objek.warnaIsi,
+            objek.warnaGaris
+          );
+        }
+      }
+
+      // Gambar ulang batas dengan style yang benar jika bukan solid
+      if (objek.jenisGaris !== "solid") {
+        algoritmaGambarLingkaran(
           ctx,
           objek.xc,
           objek.yc,
-          objek.rx,
-          objek.ry,
+          objek.radius,
           objek.warnaGaris,
-          objek.warnaIsi,
+          null,
           objek.jenisGaris
         );
+      }
+      break;
+    case "elips":
+      let algoritmaGambarElips;
+      if (objek.algoritma === "midpoint_elips") {
+        algoritmaGambarElips = AlgoritmaMidpointElips.gambarElips;
       } else {
-        // simetris_empat_elips
-        AlgoritmaSimetrisEmpatTitikElips.gambarElips(
+        algoritmaGambarElips = AlgoritmaSimetrisEmpatTitikElips.gambarElips;
+      }
+
+      // Selalu gambar batas solid terlebih dahulu
+      algoritmaGambarElips(
+        ctx,
+        objek.xc,
+        objek.yc,
+        objek.rx,
+        objek.ry,
+        objek.warnaGaris,
+        null,
+        "solid"
+      );
+
+      // Kemudian, lakukan pengisian
+      if (objek.warnaIsi && objek.warnaIsi !== "#ffffff") {
+        const startX = Math.floor(objek.xc);
+        const startY = Math.floor(objek.yc);
+        if (objek.algoritmaIsi === "flood-fill") {
+          AlgoritmaIsiArea.floodFill(ctx, startX, startY, objek.warnaIsi);
+        } else {
+          // boundary-fill dan inside-outside
+          AlgoritmaIsiArea.boundaryFill(
+            ctx,
+            startX,
+            startY,
+            objek.warnaIsi,
+            objek.warnaGaris
+          );
+        }
+      }
+      // Gambar ulang batas dengan style yang benar jika bukan solid
+      if (objek.jenisGaris !== "solid") {
+        algoritmaGambarElips(
           ctx,
           objek.xc,
           objek.yc,
           objek.rx,
           objek.ry,
           objek.warnaGaris,
-          objek.warnaIsi,
+          null,
           objek.jenisGaris
         );
       }
@@ -331,11 +389,7 @@ function apakahTitikDalamObjek(x, y, objek) {
         toleransi
       );
     case "poligon":
-      if (
-        objek.warnaIsi &&
-        objek.warnaIsi !== "#ffffff" &&
-        apakahTitikDalamPoligon(x, y, objek.titik)
-      ) {
+      if (apakahTitikDalamPoligon(x, y, objek.titik)) {
         return true;
       }
       for (
@@ -354,22 +408,12 @@ function apakahTitikDalamObjek(x, y, objek) {
       const jarakKePusat = Math.sqrt(
         Math.pow(x - objek.xc, 2) + Math.pow(y - objek.yc, 2)
       );
-      if (
-        objek.warnaIsi &&
-        objek.warnaIsi !== "#ffffff" &&
-        jarakKePusat < objek.radius
-      ) {
-        return true;
-      }
-      return Math.abs(jarakKePusat - objek.radius) < toleransi;
+      return jarakKePusat < objek.radius + toleransi;
     case "elips":
       const p =
         Math.pow(x - objek.xc, 2) / Math.pow(objek.rx, 2) +
         Math.pow(y - objek.yc, 2) / Math.pow(objek.ry, 2);
-      if (objek.warnaIsi && objek.warnaIsi !== "#ffffff" && p <= 1) {
-        return true;
-      }
-      return Math.abs(p - 1) < 0.1;
+      return p < 1.1;
   }
   return false;
 }
@@ -472,18 +516,72 @@ function gambarTrapesium(x1, y1, x2, y2) {
   gambarPoligon(titik, warnaGaris, warnaIsi, jenisGaris, "bresenham");
 }
 
-function gambarPoligon(titik, warnaGaris, warnaIsi, jenisGaris, algoritma) {
-  if (warnaIsi && warnaIsi !== "#ffffff") {
+function gambarPoligon(
+  titik,
+  warnaGaris,
+  warnaIsi,
+  jenisGaris,
+  algoritma,
+  algoritmaIsi = "inside-outside"
+) {
+  const algoritmaGambar =
+    algoritma === "bresenham"
+      ? AlgoritmaBresenham.gambarGaris
+      : AlgoritmaDDA.gambarGaris;
+
+  // Jika perlu diisi, gambar batas terlebih dahulu
+  if (warnaIsi && warnaIsi !== "#ffffff" && titik.length > 2) {
+    // Untuk algoritma yang memerlukan batas (boundary/flood), gambar batas solid sementara
+    if (
+      algoritmaIsi === "boundary-fill" ||
+      algoritmaIsi === "flood-fill" ||
+      algoritmaIsi === "inside-outside"
+    ) {
+      gambarGarisBatasSementara(titik, warnaGaris, algoritma);
+    }
+
+    // Hitung titik tengah untuk memulai pengisian
     let cx = 0,
       cy = 0;
     titik.forEach((p) => {
       cx += p[0];
       cy += p[1];
     });
-    cx /= titik.length;
-    cy /= titik.length;
-    IsiArea.floodFill(ctx, Math.floor(cx), Math.floor(cy), warnaIsi);
+    cx = Math.floor(cx / titik.length);
+    cy = Math.floor(cy / titik.length);
+
+    // Lakukan pengisian
+    switch (algoritmaIsi) {
+      case "scan-line":
+        AlgoritmaScanLine.isiPoligon(ctx, titik, warnaIsi);
+        break;
+      case "boundary-fill":
+      case "inside-outside": // Menggunakan boundary fill
+        AlgoritmaIsiArea.boundaryFill(ctx, cx, cy, warnaIsi, warnaGaris);
+        break;
+      case "flood-fill":
+        AlgoritmaIsiArea.floodFill(ctx, cx, cy, warnaIsi);
+        break;
+    }
   }
+
+  // Gambar garis batas akhir di atas isian dengan style yang benar
+  for (let i = 0; i < titik.length; i++) {
+    const j = (i + 1) % titik.length;
+    algoritmaGambar(
+      ctx,
+      titik[i][0],
+      titik[i][1],
+      titik[j][0],
+      titik[j][1],
+      warnaGaris,
+      jenisGaris
+    );
+  }
+}
+
+// Fungsi helper untuk menggambar garis batas sementara (solid) untuk boundary fill
+function gambarGarisBatasSementara(titik, warnaGaris, algoritma) {
   const algoritmaGambar =
     algoritma === "bresenham"
       ? AlgoritmaBresenham.gambarGaris
@@ -497,7 +595,47 @@ function gambarPoligon(titik, warnaGaris, warnaIsi, jenisGaris, algoritma) {
       titik[j][0],
       titik[j][1],
       warnaGaris,
-      jenisGaris
+      "solid" // Gunakan solid untuk boundary fill
     );
+  }
+}
+
+function isiArea(e) {
+  const rect = kanvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  let objekDitemukan = null;
+  for (let i = objekList.length - 1; i >= 0; i--) {
+    if (apakahTitikDalamObjek(x, y, objekList[i])) {
+      objekDitemukan = objekList[i];
+      break;
+    }
+  }
+
+  if (objekDitemukan) {
+    // Validasi algoritma untuk jenis objek
+    if (algoritmaIsi === "scan-line" && objekDitemukan.jenis !== "poligon") {
+      alert("Algoritma Scan-Line hanya dapat digunakan untuk objek poligon.");
+      return;
+    }
+
+    // Untuk objek non-poligon, hanya Inside-Outside Test yang menggunakan boundary fill
+    if (objekDitemukan.jenis !== "poligon") {
+      if (algoritmaIsi === "boundary-fill") {
+        alert(
+          "Algoritma Boundary-Fill sebaiknya digunakan untuk objek poligon."
+        );
+      } else if (algoritmaIsi === "flood-fill") {
+        alert("Algoritma Flood-Fill sebaiknya digunakan untuk objek poligon.");
+      }
+      // Tetap lanjutkan dengan pengisian, tapi gunakan Inside-Outside Test
+      objekDitemukan.algoritmaIsi = "inside-outside";
+    } else {
+      objekDitemukan.algoritmaIsi = algoritmaIsi;
+    }
+
+    objekDitemukan.warnaIsi = warnaIsi;
+    gambarUlangSemuaObjek();
   }
 }

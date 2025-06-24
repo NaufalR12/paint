@@ -7,8 +7,10 @@ function setupEventListeners() {
   // Event listener untuk mode
   const btnModePilih = document.getElementById("btnModePilih");
   const btnModeGambar = document.getElementById("btnModeGambar");
+  const btnModeIsi = document.getElementById("btnModeIsi");
   btnModePilih.addEventListener("click", () => setelMode("pilih"));
   btnModeGambar.addEventListener("click", () => setelMode("gambar"));
+  btnModeIsi.addEventListener("click", () => setelMode("isi"));
 
   // Event listener untuk pilihan dropdown
   document.getElementById("pilihAlgoritma").addEventListener("change", (e) => {
@@ -41,6 +43,13 @@ function setupEventListeners() {
       gambarUlangSemuaObjek();
     }
   });
+
+  // Event listener untuk pilihan algoritma isi
+  document
+    .getElementById("pilih-algoritma-isi")
+    .addEventListener("change", (e) => {
+      algoritmaIsi = e.target.value;
+    });
 
   // Event listener untuk aksi
   document.getElementById("btnDuplikat").addEventListener("click", () => {
@@ -85,6 +94,8 @@ function handleMouseDown(e) {
     mulaiMenggambar(e);
   } else if (mode === "pilih") {
     pilihObjekDiCanvas(e);
+  } else if (mode === "isi") {
+    isiArea(e); // Fungsi baru di drawing_handler.js
   }
 }
 

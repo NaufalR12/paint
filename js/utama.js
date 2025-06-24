@@ -10,12 +10,14 @@ let objekTerpilih = null;
 let objekList = [];
 let sedangMenggambar = false;
 let titikAwal = { x: 0, y: 0 };
-let mode = "pilih"; // Mode awal: 'pilih' atau 'gambar'
+let mode = "pilih"; // Mode: 'pilih', 'gambar', atau 'isi'
 let jenisObjek = "garis";
 let algoritmaTerpilih = "dda";
+let algoritmaIsi = "flood-fill"; // 'flood-fill' atau 'scan-line'
 let jenisGaris = "solid";
 let warnaGaris = "#000000";
 let warnaIsi = "#ffffff";
+let titikKontrolDipilih = null;
 
 // Fungsi inisialisasi utama
 function init() {
