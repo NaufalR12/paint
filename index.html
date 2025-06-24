@@ -11,6 +11,23 @@
       <header class="appbar">
         <nav class="appbar-menu">
           <div class="panel panel-inline">
+            <label><span class="icon-tool"></span> Mode</label>
+            <button
+              id="btnModePilih"
+              class="tombol-mode aktif"
+              title="Pilih Objek (V)"
+            >
+              <span class="icon-cursor"></span>
+            </button>
+            <button
+              id="btnModeGambar"
+              class="tombol-mode"
+              title="Gambar Bentuk (B)"
+            >
+              <span class="icon-plus"></span>
+            </button>
+          </div>
+          <div class="panel panel-inline">
             <label for="dropdownBentuk"
               ><span class="icon-shape"></span> Bentuk Dasar</label
             >
@@ -96,12 +113,20 @@
     <!-- Script -->
     <script src="js/algoritma/dda.js"></script>
     <script src="js/algoritma/bresenham.js"></script>
+    <script src="js/algoritma/simetris_delapan_titik.js"></script>
+    <script src="js/algoritma/simetris_empat_titik.js"></script>
     <script src="js/algoritma/midpoint_lingkaran.js"></script>
     <script src="js/algoritma/midpoint_elips.js"></script>
+    <script src="js/algoritma/simetris_empat_titik_elips.js"></script>
     <script src="js/algoritma/isi_area.js"></script>
     <script src="js/transformasi/translasi.js"></script>
     <script src="js/transformasi/rotasi.js"></script>
     <script src="js/transformasi/skala.js"></script>
+
+    <!-- Handler & Logika Utama -->
     <script src="js/utama.js"></script>
+    <script src="js/ui/menu_handler.js"></script>
+    <script src="js/canvas/drawing_handler.js"></script>
+    <script src="js/canvas/event_handler.js"></script>
   </body>
 </html>

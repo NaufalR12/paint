@@ -396,17 +396,13 @@ input[type="color"] {
   align-items: center;
   gap: 2px;
 }
-.panel-inline select {
-  background: #fff;
-  color: #222;
-  border-radius: 6px;
-  border: none;
-  padding: 4px 8px;
-  font-size: 13px;
-  min-width: 90px;
-  box-shadow: 0 1px 2px rgba(25, 118, 210, 0.06);
-  outline: none;
-  transition: box-shadow 0.2s;
+.panel-inline select,
+.panel-inline button {
+  margin-left: 8px;
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
 }
 .panel-inline select:focus {
   box-shadow: 0 0 0 2px #90caf9;
@@ -476,4 +472,41 @@ body,
 html {
   min-height: 100vh;
   position: relative;
+}
+
+/* Gaya untuk tombol mode */
+.tombol-mode {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tombol-mode:hover {
+  background-color: #e0e0e0;
+}
+
+.tombol-mode.aktif {
+  background-color: #cce5ff;
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.icon-tool,
+.icon-cursor,
+.icon-plus {
+  /* Tambahkan gaya untuk ikon jika Anda menggunakan font ikon atau SVG */
+  display: inline-block;
+  /* Contoh sederhana menggunakan teks */
+  font-weight: bold;
+}
+.icon-cursor::before {
+  content: "☝";
+  font-size: 16px;
+}
+
+.icon-plus::before {
+  content: "+";
+  font-size: 16px;
 }

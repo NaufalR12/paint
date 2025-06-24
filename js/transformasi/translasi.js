@@ -44,8 +44,8 @@ class Translasi {
       objek.x2 += tx;
       objek.y2 += ty;
     } else if (objek.jenis === "lingkaran" || objek.jenis === "elips") {
-      objek.x += tx;
-      objek.y += ty;
+      objek.xc += tx;
+      objek.yc += ty;
     } else if (objek.jenis === "poligon") {
       objek.titik = this.arrayTitik(objek.titik, tx, ty);
     }

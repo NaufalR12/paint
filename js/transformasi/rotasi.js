@@ -63,8 +63,8 @@ class Rotasi {
         xPusat = (objek.x1 + objek.x2) / 2;
         yPusat = (objek.y1 + objek.y2) / 2;
       } else if (objek.jenis === "lingkaran" || objek.jenis === "elips") {
-        xPusat = objek.x;
-        yPusat = objek.y;
+        xPusat = objek.xc;
+        yPusat = objek.yc;
       } else if (objek.jenis === "poligon") {
         // Hitung titik pusat poligon
         const sumX = objek.titik.reduce((sum, [x]) => sum + x, 0);
@@ -86,14 +86,17 @@ class Rotasi {
       objek.y1 = titik1.y;
       objek.x2 = titik2.x;
       objek.y2 = titik2.y;
-    } else if (objek.jenis === "lingkaran" || objek.jenis === "elips") {
-      const hasil = this.titik(objek.x, objek.y, sudut, xPusat, yPusat);
-      objek.x = hasil.x;
-      objek.y = hasil.y;
-      // Untuk elips, rotasi juga mempengaruhi orientasi
-      if (objek.jenis === "elips") {
-        objek.sudut = (objek.sudut || 0) + sudut;
-      }
+    } else if (objek.jenis === "lingkaran") {
+      // Rotasi lingkaran hanya memindahkan titik pusatnya
+      const hasil = this.titik(objek.xc, objek.yc, sudut, xPusat, yPusat);
+      objek.xc = hasil.x;
+      objek.yc = hasil.y;
+    } else if (objek.jenis === "elips") {
+      // Rotasi elips memindahkan pusat dan mengubah orientasi
+      const hasil = this.titik(objek.xc, objek.yc, sudut, xPusat, yPusat);
+      objek.xc = hasil.x;
+      objek.yc = hasil.y;
+      objek.sudut = (objek.sudut || 0) + sudut;
     } else if (objek.jenis === "poligon") {
       objek.titik = this.arrayTitik(objek.titik, sudut, xPusat, yPusat);
     }

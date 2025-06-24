@@ -61,8 +61,8 @@ class Skala {
         xPusat = (objek.x1 + objek.x2) / 2;
         yPusat = (objek.y1 + objek.y2) / 2;
       } else if (objek.jenis === "lingkaran" || objek.jenis === "elips") {
-        xPusat = objek.x;
-        yPusat = objek.y;
+        xPusat = objek.xc;
+        yPusat = objek.yc;
       } else if (objek.jenis === "poligon") {
         // Hitung titik pusat poligon
         const sumX = objek.titik.reduce((sum, [x]) => sum + x, 0);
@@ -85,15 +85,15 @@ class Skala {
       objek.x2 = titik2.x;
       objek.y2 = titik2.y;
     } else if (objek.jenis === "lingkaran") {
-      const hasil = this.titik(objek.x, objek.y, sx, sy, xPusat, yPusat);
-      objek.x = hasil.x;
-      objek.y = hasil.y;
-      // Untuk lingkaran, gunakan rata-rata sx dan sy untuk radius
+      const hasil = this.titik(objek.xc, objek.yc, sx, sy, xPusat, yPusat);
+      objek.xc = hasil.x;
+      objek.yc = hasil.y;
+      // Untuk lingkaran, gunakan rata-rata sx dan sy untuk radius agar tetap lingkaran
       objek.radius *= (sx + sy) / 2;
     } else if (objek.jenis === "elips") {
-      const hasil = this.titik(objek.x, objek.y, sx, sy, xPusat, yPusat);
-      objek.x = hasil.x;
-      objek.y = hasil.y;
+      const hasil = this.titik(objek.xc, objek.yc, sx, sy, xPusat, yPusat);
+      objek.xc = hasil.x;
+      objek.yc = hasil.y;
       objek.rx *= sx;
       objek.ry *= sy;
     } else if (objek.jenis === "poligon") {
