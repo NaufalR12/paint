@@ -14,6 +14,7 @@ let mode = "pilih"; // Mode: 'pilih', 'gambar', atau 'isi'
 let jenisObjek = "garis";
 let algoritmaTerpilih = "dda";
 let algoritmaIsi = "inside-outside";
+let jenisGaris = "solid"; // 'solid', 'dashed', 'dotted', 'dashdot'
 let jenisBrush = "pena"; // 'pena', 'pensil', 'spidol', 'cat-air'
 let warnaGaris = "#000000";
 let warnaIsi = "#ffffff";
@@ -39,6 +40,7 @@ function init() {
 
   // Ambil state awal dari UI
   jenisObjek = document.getElementById("dropdownBentuk").value;
+  jenisGaris = document.getElementById("jenisGaris").value;
 
   // Pasang semua event listener untuk UI dan kanvas
   setupEventListeners();

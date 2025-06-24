@@ -25,16 +25,25 @@ function sedangMenggambarObjek(e) {
         warnaGaris: warnaGaris,
         ketebalan: ketebalanGaris,
         jenisBrush: jenisBrush,
+        jenisGaris: jenisGaris,
       });
       if (algoritmaTerpilih === "dda") {
-        AlgoritmaDDA.gambarGaris(plotterGaris, titikAwal.x, titikAwal.y, x, y);
+        AlgoritmaDDA.gambarGaris(
+          plotterGaris,
+          titikAwal.x,
+          titikAwal.y,
+          x,
+          y,
+          jenisGaris
+        );
       } else {
         AlgoritmaBresenham.gambarGaris(
           plotterGaris,
           titikAwal.x,
           titikAwal.y,
           x,
-          y
+          y,
+          jenisGaris
         );
       }
       break;
@@ -185,6 +194,7 @@ function selesaiMenggambar(e) {
         algoritma: algoritmaTerpilih,
         ketebalan: ketebalanGaris,
         jenisBrush: jenisBrush,
+        jenisGaris: jenisGaris,
       };
       break;
     case "persegi":
@@ -302,7 +312,14 @@ function gambarObjek(objek) {
         objek.algoritma === "bresenham"
           ? AlgoritmaBresenham.gambarGaris
           : AlgoritmaDDA.gambarGaris;
-      algoritmaGambarGaris(plotter, objek.x1, objek.y1, objek.x2, objek.y2);
+      algoritmaGambarGaris(
+        plotter,
+        objek.x1,
+        objek.y1,
+        objek.x2,
+        objek.y2,
+        objek.jenisGaris
+      );
       break;
     case "poligon":
       const plotterPoligon = createPlotterForObject(objek);

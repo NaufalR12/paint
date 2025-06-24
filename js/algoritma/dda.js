@@ -10,8 +10,9 @@ class AlgoritmaDDA {
    * @param {number} y1 - Koordinat y awal.
    * @param {number} x2 - Koordinat x akhir.
    * @param {number} y2 - Koordinat y akhir.
+   * @param {string} jenisGaris - Tipe garis ('solid', 'dashed', 'dotted', 'dashdot').
    */
-  static gambarGaris(plotter, x1, y1, x2, y2) {
+  static gambarGaris(plotter, x1, y1, x2, y2, jenisGaris = "solid") {
     const dx = x2 - x1;
     const dy = y2 - y1;
     const steps = Math.abs(dx) > Math.abs(dy) ? Math.abs(dx) : Math.abs(dy);
@@ -23,7 +24,29 @@ class AlgoritmaDDA {
     let y = y1;
 
     for (let i = 0; i <= steps; i++) {
-      plotter(Math.round(x), Math.round(y));
+      let draw = false;
+      switch (jenisGaris) {
+        case "solid":
+          draw = true;
+          break;
+        case "dashed":
+          draw = i % 10 < 7;
+          break;
+        case "dotted":
+          draw = i % 4 < 2;
+          break;
+        case "dashdot":
+          const patternPos = i % 15;
+          draw = patternPos < 7 || (patternPos >= 10 && patternPos < 12);
+          break;
+        default:
+          draw = true;
+      }
+
+      if (draw) {
+        plotter(Math.round(x), Math.round(y));
+      }
+
       x += xIncrement;
       y += yIncrement;
     }
