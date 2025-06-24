@@ -147,13 +147,24 @@ function sedangMenggambarObjek(e) {
         ketebalan: ketebalanGaris,
         jenisBrush: jenisBrush,
       });
-      // TODO: Tambahkan algoritma lain nanti
-      AlgoritmaMidpointLingkaran.gambarLingkaran(
-        plotterPreview,
-        titikAwal.x,
-        titikAwal.y,
-        radius
-      );
+      if (algoritmaTerpilih === "midpoint") {
+        AlgoritmaMidpointLingkaran.gambarLingkaran(
+          plotterPreview,
+          titikAwal.x,
+          titikAwal.y,
+          radius
+        );
+      } else if (algoritmaTerpilih === "simetris") {
+        AlgoritmaSimetrisDelapanTitik.gambarLingkaran(
+          ctx,
+          titikAwal.x,
+          titikAwal.y,
+          radius,
+          warnaGaris,
+          null,
+          jenisGaris
+        );
+      }
       break;
     case "elips":
       const rx = Math.abs(x - titikAwal.x);
@@ -371,12 +382,24 @@ function gambarObjek(objek) {
           jenisBrush: "pena",
           ketebalan: 1,
         });
-        AlgoritmaMidpointLingkaran.gambarLingkaran(
-          plotterBatasIsi,
-          objek.xc,
-          objek.yc,
-          objek.radius
-        );
+        if (objek.algoritma === "midpoint") {
+          AlgoritmaMidpointLingkaran.gambarLingkaran(
+            plotterBatasIsi,
+            objek.xc,
+            objek.yc,
+            objek.radius
+          );
+        } else if (objek.algoritma === "simetris") {
+          AlgoritmaSimetrisDelapanTitik.gambarLingkaran(
+            ctx,
+            objek.xc,
+            objek.yc,
+            objek.radius,
+            objek.warnaGaris,
+            null,
+            objek.jenisGaris
+          );
+        }
 
         // Lakukan pengisian
         const startX = Math.floor(objek.xc);
@@ -395,12 +418,24 @@ function gambarObjek(objek) {
       }
 
       // Gambar garis batas akhir dengan brush yang benar
-      AlgoritmaMidpointLingkaran.gambarLingkaran(
-        plotterFinal,
-        objek.xc,
-        objek.yc,
-        objek.radius
-      );
+      if (objek.algoritma === "midpoint") {
+        AlgoritmaMidpointLingkaran.gambarLingkaran(
+          plotterFinal,
+          objek.xc,
+          objek.yc,
+          objek.radius
+        );
+      } else if (objek.algoritma === "simetris") {
+        AlgoritmaSimetrisDelapanTitik.gambarLingkaran(
+          ctx,
+          objek.xc,
+          objek.yc,
+          objek.radius,
+          objek.warnaGaris,
+          null,
+          objek.jenisGaris
+        );
+      }
       break;
     case "elips":
       let algoritmaGambarElips;
