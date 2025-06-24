@@ -632,7 +632,9 @@ function gambarPoligon(
 
   // Jika perlu diisi, gambar batas sementara dan panggil algoritma isi
   if (warnaIsi && warnaIsi !== "#ffffff" && titik.length > 2) {
-    if (algoritmaIsi !== "scan-line") {
+    if (algoritmaIsi === "inside-outside") {
+      AlgoritmaInsideOutside.isiPoligon(ctx, titik, warnaIsi);
+    } else if (algoritmaIsi !== "scan-line") {
       // Gambar batas solid sementara untuk boundary/flood fill
       const plotterBatasIsi = createPlotterForObject({
         warnaGaris: warnaGaris,
@@ -667,7 +669,6 @@ function gambarPoligon(
         AlgoritmaScanLine.isiPoligon(ctx, titik, warnaIsi);
         break;
       case "boundary-fill":
-      case "inside-outside":
         AlgoritmaIsiArea.boundaryFill(ctx, cx, cy, warnaIsi, warnaGaris);
         break;
       case "flood-fill":
