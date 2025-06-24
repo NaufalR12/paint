@@ -113,10 +113,8 @@ document.addEventListener("DOMContentLoaded", function () {
     } else if (mode === "isi") {
       panelIsi.classList.remove("sembunyi");
     } else if (mode === "pilih") {
-      // Jika ada objek terpilih, tampilkan panel transformasi
-      if (objekTerpilih) {
-        panelTransformasi.classList.remove("sembunyi");
-      }
+      // Selalu tampilkan panel transformasi dalam mode pilih
+      panelTransformasi.classList.remove("sembunyi");
     }
   }
 
@@ -158,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Panggil saat objek dipilih atau tidak dipilih untuk memperbarui panel transformasi
-  window.addEventListener("objekterpilihubah", aturPanelAktif);
+  // window.addEventListener("objekterpilihubah", aturPanelAktif);
 
   // Inisialisasi awal
   perbaruiStatusTombolMode();

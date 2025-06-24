@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Paint Dea - Grafika Komputer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="css/gaya.css" />
   </head>
   <body>
@@ -64,23 +70,18 @@
               <option value="dashdot">Garis Kombinasi</option>
             </select>
           </div>
-          <div class="panel panel-inline warna-panel">
-            <label
-              ><span class="icon-kuas"></span>
-              <input
-                type="color"
-                id="warnaGaris"
-                value="#000000"
-                title="Warna Garis"
-            /></label>
-            <label
-              ><span class="icon-ember"></span>
-              <input
-                type="color"
-                id="warnaIsi"
-                value="#ffffff"
-                title="Warna Isi"
-            /></label>
+          <div class="panel-inline">
+            <label>Warna</label>
+            <div class="warna-panel">
+              <label for="warnaGaris" title="Warna Garis">
+                <input type="color" id="warnaGaris" value="#000000" />
+                <span id="warnaGarisPreview"></span>
+              </label>
+              <label for="warnaIsi" title="Warna Isi">
+                <input type="color" id="warnaIsi" value="#ffffff" />
+                <span id="warnaIsiPreview"></span>
+              </label>
+            </div>
           </div>
         </nav>
       </header>
@@ -141,23 +142,30 @@
           </div>
           <div class="panel sembunyi" id="panelTransformasi">
             <h2>Transformasi</h2>
-            <div id="formTransformasi"></div>
             <div class="grup-kontrol">
-              <button id="btnTerapkanTransformasi" class="lebar-penuh">
-                Terapkan
-              </button>
+              <label for="dropdownTransformasi">Jenis:</label>
+              <select id="dropdownTransformasi">
+                <option value="translasi">Translasi</option>
+                <option value="rotasi">Rotasi</option>
+                <option value="skala">Skala</option>
+                <option value="refleksi">Refleksi</option>
+                <option value="shear">Shear</option>
+              </select>
             </div>
+            <div id="formTransformasi"></div>
           </div>
           <div class="panel">
             <h2>Aksi</h2>
-            <button id="btnDuplikat">Duplikat Objek</button>
-            <button id="btnHapus">Hapus Objek</button>
-            <button id="btnReset">Reset Canvas</button>
+            <div class="grup-aksi-tombol">
+              <button id="btnDuplikat">Duplikat Objek</button>
+              <button id="btnHapus">Hapus Objek</button>
+              <button id="btnReset">Reset Canvas</button>
+            </div>
           </div>
         </aside>
       </div>
       <footer class="footer-app">
-        © 2025 naufal rafid muhammad faddila (123220052)
+        © 2025 Naufal Rafid Muhammad Faddila (123220052)
       </footer>
     </div>
 
@@ -173,6 +181,8 @@
     <script src="js/transformasi/translasi.js"></script>
     <script src="js/transformasi/rotasi.js"></script>
     <script src="js/transformasi/skala.js"></script>
+    <script src="js/transformasi/refleksi.js"></script>
+    <script src="js/transformasi/shear.js"></script>
 
     <!-- Handler & Logika Utama -->
     <script src="js/utama.js"></script>

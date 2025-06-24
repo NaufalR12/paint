@@ -46,6 +46,7 @@ function init() {
   // Setup UI awal
   perbaruiOpsiAlgoritma();
   setelMode(mode);
+  setupWarnaPreview();
 
   // Setup form transformasi
   setupDropdownsAndDynamicForm();
@@ -75,6 +76,10 @@ function setupDropdownsAndDynamicForm() {
       formTransformasi.innerHTML = `<input type="number" id="sudut" placeholder="Sudut (°)" value="45"><input type="number" id="cx" placeholder="Pusat X (opsional)"><input type="number" id="cy" placeholder="Pusat Y (opsional)"><button id="btnTerapkanRotasi">Terapkan</button>`;
     } else if (jenisTransformasi === "skala") {
       formTransformasi.innerHTML = `<input type="number" id="sx" placeholder="sx" value="1.5" step="0.1"><input type="number" id="sy" placeholder="sy" value="1.5" step="0.1"><input type="number" id="cx" placeholder="Pusat X (opsional)"><input type="number" id="cy" placeholder="Pusat Y (opsional)"><button id="btnTerapkanSkala">Terapkan</button>`;
+    } else if (jenisTransformasi === "refleksi") {
+      formTransformasi.innerHTML = `<select id="jenisRefleksi"><option value="x">Sumbu X</option><option value="y">Sumbu Y</option><option value="origin">Titik Asal</option></select><button id="btnTerapkanRefleksi">Terapkan</button>`;
+    } else if (jenisTransformasi === "shear") {
+      formTransformasi.innerHTML = `<input type="number" id="shx" placeholder="shx" value="0.1" step="0.1"><input type="number" id="shy" placeholder="shy" value="0" step="0.1"><button id="btnTerapkanShear">Terapkan</button>`;
     }
     pasangEventFormTransformasi();
   }
@@ -131,4 +136,44 @@ function pasangEventFormTransformasi() {
       }
     };
   }
+  const btnRefleksi = document.getElementById("btnTerapkanRefleksi");
+  if (btnRefleksi) {
+    btnRefleksi.onclick = () => {
+      const jenis = document.getElementById("jenisRefleksi").value;
+      if (objekTerpilih) {
+        Refleksi.objek(objekTerpilih, jenis);
+        gambarUlangSemuaObjek();
+      }
+    };
+  }
+  const btnShear = document.getElementById("btnTerapkanShear");
+  if (btnShear) {
+    btnShear.onclick = () => {
+      const shx = parseFloat(document.getElementById("shx").value) || 0;
+      const shy = parseFloat(document.getElementById("shy").value) || 0;
+      if (objekTerpilih) {
+        Shear.objek(objekTerpilih, shx, shy);
+        gambarUlangSemuaObjek();
+      }
+    };
+  }
+}
+
+function setupWarnaPreview() {
+  const warnaGarisInput = document.getElementById("warnaGaris");
+  const warnaGarisPreview = document.getElementById("warnaGarisPreview");
+  const warnaIsiInput = document.getElementById("warnaIsi");
+  const warnaIsiPreview = document.getElementById("warnaIsiPreview");
+
+  // Atur warna awal
+  warnaGarisPreview.style.backgroundColor = warnaGarisInput.value;
+  warnaIsiPreview.style.backgroundColor = warnaIsiInput.value;
+
+  warnaGarisInput.addEventListener("input", (e) => {
+    warnaGarisPreview.style.backgroundColor = e.target.value;
+  });
+
+  warnaIsiInput.addEventListener("input", (e) => {
+    warnaIsiPreview.style.backgroundColor = e.target.value;
+  });
 }
